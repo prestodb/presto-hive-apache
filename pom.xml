@@ -2,15 +2,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
     <groupId>com.facebook.presto.hive</groupId>
     <artifactId>hive-apache</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.4-SNAPSHOT</version>
 
     <name>hive-apache</name>
     <description>Shaded version of Apache Hive for Presto</description>
     <url>https://github.com/facebook/presto-hive-apache</url>
 
-    <inceptionYear>2012</inceptionYear>
+    <inceptionYear>2013</inceptionYear>
 
     <licenses>
         <license>
@@ -20,25 +26,20 @@
         </license>
     </licenses>
 
+    <developers>
+        <!-- see original projects for developer information -->
+    </developers>
+
     <scm>
         <connection>scm:git:git://github.com/facebook/presto-hive-apache.git</connection>
+        <developerConnection>scm:git:git://github.com/facebook/presto-hive-apache.git</developerConnection>
         <url>https://github.com/facebook/presto-hive-apache</url>
         <tag>HEAD</tag>
     </scm>
 
-    <distributionManagement>
-        <repository>
-            <id>facebook-releases</id>
-            <url>http://nexus.vip.facebook.com:8181/nexus/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>facebook-snapshots</id>
-            <url>http://nexus.vip.facebook.com:8181/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.targetJdk>1.7</project.build.targetJdk>
         <shadeBase>com.facebook.presto.hive.shaded</shadeBase>
         <dep.slf4j.version>1.6.6</dep.slf4j.version>
         <dep.hive.version>0.11.0</dep.hive.version>
@@ -334,11 +335,33 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <rules>
+                        <requireJavaVersion>
+                            <version>${project.build.targetJdk}</version>
+                        </requireJavaVersion>
+                    </rules>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${project.build.targetJdk}</source>
+                    <target>${project.build.targetJdk}</target>
                 </configuration>
             </plugin>
 
@@ -358,9 +381,6 @@
                         <goals>
                             <goal>jar-no-fork</goal>
                         </goals>
-                        <configuration>
-                            <attach>false</attach>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -414,9 +434,10 @@
                             </relocations>
                             <filters>
                                 <filter>
-                                    <artifact>*:*</artifact>
+                                    <artifact>org.slf4j:*</artifact>
                                     <excludes>
-                                        <exclude>META-INF/**</exclude>
+                                        <exclude>META-INF/maven/**</exclude>
+                                        <exclude>META-INF/services/**</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
@@ -442,21 +463,44 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <mavenExecutorId>forked-path</mavenExecutorId>
-                    <pushChanges>false</pushChanges>
-                    <localCheckout>true</localCheckout>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <preparationGoals>clean install</preparationGoals>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <tagNameFormat>@{project.version}</tagNameFormat>
-                </configuration>
-            </plugin>
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.3.2</version>
+                    <configuration>
+                        <mavenExecutorId>forked-path</mavenExecutorId>
+                        <pushChanges>false</pushChanges>
+                        <localCheckout>true</localCheckout>
+                        <useReleaseProfile>false</useReleaseProfile>
+                        <preparationGoals>clean install</preparationGoals>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <tagNameFormat>@{project.version}</tagNameFormat>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.4</version>
+                    <configuration>
+                        <useAgent>true</useAgent>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.9</version>
+                    <configuration>
+                        <source>${project.build.targetJdk}</source>
+                        <additionalparam>-quiet</additionalparam>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>
