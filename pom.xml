@@ -65,79 +65,6 @@
             <version>${dep.slf4j.version}</version>
         </dependency>
 
-        <!-- hive -->
-        <dependency>
-            <groupId>org.apache.hive</groupId>
-            <artifactId>hive-metastore</artifactId>
-            <version>${dep.hive.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.hive</groupId>
-                    <artifactId>hive-serde</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-connectionpool</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-enhancer</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-rdbms</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.jdo</groupId>
-                    <artifactId>jdo2-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.derby</groupId>
-                    <artifactId>derby</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>asm</groupId>
-                    <artifactId>asm</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.antlr</groupId>
-                    <artifactId>antlr</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.antlr</groupId>
-                    <artifactId>antlr-runtime</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.antlr</groupId>
-                    <artifactId>ST4</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.mockito</groupId>
-                    <artifactId>mockito-all</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-dbcp</groupId>
-                    <artifactId>commons-dbcp</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-pool</groupId>
-                    <artifactId>commons-pool</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-exec</artifactId>
@@ -150,6 +77,10 @@
                 <exclusion>
                     <groupId>org.apache.hive</groupId>
                     <artifactId>hive-hbase-handler</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hive</groupId>
+                    <artifactId>hive-metastore</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>com.googlecode.javaewah</groupId>
@@ -438,12 +369,6 @@
                                     <excludes>
                                         <exclude>META-INF/maven/**</exclude>
                                         <exclude>META-INF/services/**</exclude>
-                                    </excludes>
-                                </filter>
-                                <filter>
-                                    <artifact>org.apache.hive:hive-metastore</artifact>
-                                    <excludes>
-                                        <exclude>package.jdo</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
