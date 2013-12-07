@@ -450,7 +450,6 @@
                                     <artifact>org.apache.hive:hive-exec</artifact>
                                     <excludes>
                                         <exclude>org/apache/hadoop/hive/ql/io/CodecPool.class</exclude>
-                                        <exclude>org/apache/commons/lang/**</exclude>
                                         <exclude>javaewah/**</exclude>
                                         <exclude>javax/realtime/**</exclude>
                                         <exclude>javolution/**</exclude>
