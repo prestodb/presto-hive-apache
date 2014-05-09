@@ -43,6 +43,7 @@
         <shadeBase>com.facebook.presto.hive.shaded</shadeBase>
         <dep.slf4j.version>1.6.6</dep.slf4j.version>
         <dep.hive.version>0.13.0</dep.hive.version>
+        <dep.parquet.version>1.3.2</dep.parquet.version>
     </properties>
 
     <dependencies>
@@ -289,6 +290,31 @@
                 <exclusion>
                     <groupId>org.apache.thrift</groupId>
                     <artifactId>libthrift</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- include the sources for Parquet -->
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>parquet-common</artifactId>
+            <version>${dep.parquet.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>parquet-column</artifactId>
+            <version>${dep.parquet.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>parquet-hadoop</artifactId>
+            <version>${dep.parquet.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.xerial.snappy</groupId>
+                    <artifactId>snappy-java</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -547,6 +573,12 @@
                                 </filter>
                                 <filter>
                                     <artifact>org.apache.hive.shims:*</artifact>
+                                    <excludes>
+                                        <exclude>**/*.class</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>com.twitter:parquet-*</artifact>
                                     <excludes>
                                         <exclude>**/*.class</exclude>
                                     </excludes>
