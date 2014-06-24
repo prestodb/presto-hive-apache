@@ -550,6 +550,7 @@
                                     <artifact>org.apache.hive:hive-exec</artifact>
                                     <excludes>
                                         <exclude>org/apache/hadoop/hive/ql/io/CodecPool.class</exclude>
+                                        <exclude>org/apache/hadoop/hive/serde2/lazy/LazyMap.class</exclude>
                                         <exclude>javaewah/**</exclude>
                                         <exclude>javax/realtime/**</exclude>
                                         <exclude>javolution/**</exclude>
