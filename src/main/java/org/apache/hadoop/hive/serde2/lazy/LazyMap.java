@@ -169,13 +169,11 @@ public class LazyMap extends LazyNonPrimitive<LazyMapObjectInspector> {
             : keyValueSeparatorPosition);
         valueLength[mapSize] = elementByteEnd - (keyEnd[mapSize] + 1);
         LazyPrimitive<?, ?> lazyKey = uncheckedGetKey(mapSize);
-        if (lazyKey == null) {
-          continue;
-        }
-        Object key = lazyKey.getObject();
-        if(!keySet.contains(key)) {
+        // If key is not null and we do not already have a value for the
+        // key, add it; otherwise skip it
+        if (lazyKey != null && !keySet.contains(lazyKey.getObject())) {
           mapSize++;
-          keySet.add(key);
+          keySet.add(lazyKey.getObject());
         } else {
           keyInited[mapSize] = false;
         }

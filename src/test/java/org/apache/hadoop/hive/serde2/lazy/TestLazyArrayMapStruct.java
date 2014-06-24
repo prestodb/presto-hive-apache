@@ -254,6 +254,37 @@ public class TestLazyArrayMapStruct extends TestCase {
   }
 
   /**
+   * Test the LazyMap with null keys.
+   */
+  public void testLazyMapWithNullKeys() throws Throwable {
+    try {
+      {
+        // Map of String to String
+        Text nullSequence = new Text("\\N");
+        ObjectInspector oi = LazyFactory.createLazyObjectInspector(
+            TypeInfoUtils.getTypeInfosFromTypeString("map<string,string>").get(
+            0), new byte[] {(byte) '#', (byte) '\t'}, 0, nullSequence,
+            false, (byte) 0);
+        LazyMap b = (LazyMap) LazyFactory.createLazyObject(oi);
+        byte[] data = new byte[] {'\\', 'N', '\t', 'X', '#', '2', '\t', 'd'};
+          TestLazyPrimitive.initLazyObject(b, data, 0, data.length);
+
+        assertEquals(new Text("d"), ((LazyString) b
+            .getMapValueElement(new Text("2"))).getWritableObject());
+
+        assertEquals("{'2':'d'}"
+            .replace('\'', '\"'), SerDeUtils.getJSONString(b, oi));
+        assertEquals(1, b.getMapSize());
+      }
+
+
+    } catch (Throwable e) {
+      e.printStackTrace();
+      throw e;
+    }
+  }
+
+  /**
    * Test the LazyStruct class.
    */
   public void testLazyStruct() throws Throwable {
