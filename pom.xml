@@ -43,7 +43,7 @@
         <shadeBase>com.facebook.presto.hive.\$internal</shadeBase>
         <dep.slf4j.version>1.6.6</dep.slf4j.version>
         <dep.hive.version>0.13.1</dep.hive.version>
-        <dep.parquet.version>1.3.2</dep.parquet.version>
+        <dep.parquet.version>1.6.0rc1</dep.parquet.version>
     </properties>
 
     <dependencies>
