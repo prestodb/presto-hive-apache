@@ -293,7 +293,7 @@
             </exclusions>
         </dependency>
 
-        <!-- include the sources for Parquet -->
+        <!-- use new version of Parquet -->
         <dependency>
             <groupId>com.twitter</groupId>
             <artifactId>parquet-common</artifactId>
@@ -574,6 +574,7 @@
                                         <exclude>javolution/**</exclude>
                                         <exclude>org/apache/avro/**</exclude>
                                         <exclude>org/apache/thrift/**</exclude>
+                                        <exclude>parquet/**</exclude>
                                         <exclude>*.properties</exclude>
                                         <exclude>*.jar</exclude>
                                     </excludes>
@@ -592,12 +593,6 @@
                                 </filter>
                                 <filter>
                                     <artifact>org.apache.hive.shims:*</artifact>
-                                    <excludes>
-                                        <exclude>**/*.class</exclude>
-                                    </excludes>
-                                </filter>
-                                <filter>
-                                    <artifact>com.twitter:parquet-*</artifact>
                                     <excludes>
                                         <exclude>**/*.class</exclude>
                                     </excludes>
