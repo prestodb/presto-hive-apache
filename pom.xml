@@ -42,7 +42,7 @@
         <project.build.targetJdk>1.7</project.build.targetJdk>
         <shadeBase>com.facebook.presto.hive.\$internal</shadeBase>
         <dep.slf4j.version>1.6.6</dep.slf4j.version>
-        <dep.hive.version>0.13.1</dep.hive.version>
+        <dep.hive.version>1.2.0</dep.hive.version>
         <dep.parquet.version>1.6.0</dep.parquet.version>
     </properties>
 
@@ -135,6 +135,42 @@
                     <artifactId>bonecp</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>com.twitter</groupId>
+                    <artifactId>parquet-hadoop-bundle</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.sf.opencsv</groupId>
+                    <artifactId>opencsv</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.json</groupId>
+                    <artifactId>json</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>joda-time</groupId>
+                    <artifactId>joda-time</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.curator</groupId>
+                    <artifactId>curator-framework</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.ant</groupId>
+                    <artifactId>ant</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.ant</groupId>
+                    <artifactId>ant-launcher</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.apache.zookeeper</groupId>
                     <artifactId>zookeeper</artifactId>
                 </exclusion>
@@ -151,6 +187,10 @@
                     <artifactId>commons-cli</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>commons-dbcp</groupId>
+                    <artifactId>commons-dbcp</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>commons-lang</groupId>
                     <artifactId>commons-lang</artifactId>
                 </exclusion>
@@ -159,12 +199,20 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>commons-pool</groupId>
+                    <artifactId>commons-pool</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>log4j</groupId>
                     <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>apache-log4j-extras</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -197,6 +245,26 @@
                 <exclusion>
                     <groupId>org.apache.zookeeper</groupId>
                     <artifactId>zookeeper</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.curator</groupId>
+                    <artifactId>apache-curator</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.curator</groupId>
+                    <artifactId>curator-framework</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.calcite</groupId>
+                    <artifactId>calcite-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.calcite</groupId>
+                    <artifactId>calcite-avatica</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.ivy</groupId>
+                    <artifactId>ivy</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.ant</groupId>
@@ -263,6 +331,10 @@
                     <artifactId>log4j</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>apache-log4j-extras</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
@@ -293,7 +365,7 @@
             </exclusions>
         </dependency>
 
-        <!-- use new version of Parquet -->
+        <!-- include the sources for Parquet -->
         <dependency>
             <groupId>com.twitter</groupId>
             <artifactId>parquet-common</artifactId>
@@ -415,25 +487,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.8.7</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <!-- depend on newer version to avoid broken pom in older version -->
-            <dependency>
-                <groupId>org.datanucleus</groupId>
-                <artifactId>datanucleus-enhancer</artifactId>
-                <version>3.1.1</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>
@@ -541,6 +595,18 @@
                                     <shadedPattern>${shadeBase}.org.json</shadedPattern>
                                 </relocation>
                                 <relocation>
+                                    <pattern>org.joda.time</pattern>
+                                    <shadedPattern>${shadeBase}.org.joda.time</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>au.com.bytecode.opencsv</pattern>
+                                    <shadedPattern>${shadeBase}.au.com.bytecode.opencsv</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>jodd</pattern>
+                                    <shadedPattern>${shadeBase}.jodd</shadedPattern>
+                                </relocation>
+                                <relocation>
                                     <pattern>org.slf4j</pattern>
                                     <shadedPattern>${shadeBase}.org.slf4j</shadedPattern>
                                 </relocation>
@@ -568,15 +634,14 @@
                                     <artifact>org.apache.hive:hive-exec</artifact>
                                     <excludes>
                                         <exclude>org/apache/hadoop/hive/ql/io/CodecPool.class</exclude>
-                                        <exclude>org/apache/hadoop/hive/serde2/lazy/LazyMap.class</exclude>
                                         <exclude>javaewah/**</exclude>
                                         <exclude>javax/realtime/**</exclude>
                                         <exclude>javolution/**</exclude>
                                         <exclude>org/apache/avro/**</exclude>
                                         <exclude>org/apache/thrift/**</exclude>
-                                        <exclude>parquet/**</exclude>
                                         <exclude>*.properties</exclude>
                                         <exclude>*.jar</exclude>
+                                        <excludes>templates/release-notes.vm</excludes>
                                     </excludes>
                                 </filter>
                                 <filter>
@@ -593,6 +658,12 @@
                                 </filter>
                                 <filter>
                                     <artifact>org.apache.hive.shims:*</artifact>
+                                    <excludes>
+                                        <exclude>**/*.class</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>com.twitter:parquet-*</artifact>
                                     <excludes>
                                         <exclude>**/*.class</exclude>
                                     </excludes>
