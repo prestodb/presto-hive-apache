@@ -641,7 +641,7 @@
                                         <exclude>org/apache/thrift/**</exclude>
                                         <exclude>*.properties</exclude>
                                         <exclude>*.jar</exclude>
-                                        <excludes>templates/release-notes.vm</excludes>
+                                        <exclude>templates/release-notes.vm</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
