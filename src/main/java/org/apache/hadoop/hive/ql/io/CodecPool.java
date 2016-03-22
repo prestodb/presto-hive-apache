@@ -37,11 +37,11 @@ public final class CodecPool
 
     public static void returnCompressor(Compressor compressor)
     {
-        // no-op
+        compressor.end();
     }
 
     public static void returnDecompressor(Decompressor decompressor)
     {
-        // no-op
+        decompressor.end();
     }
 }
