@@ -43,7 +43,7 @@
         <shadeBase>com.facebook.presto.hive.\$internal</shadeBase>
         <dep.slf4j.version>1.6.6</dep.slf4j.version>
         <dep.hive.version>1.2.0</dep.hive.version>
-        <dep.parquet.version>1.6.0</dep.parquet.version>
+        <dep.parquet.version>1.8.1</dep.parquet.version>
     </properties>
 
     <dependencies>
@@ -94,6 +94,10 @@
             <artifactId>hive-metastore</artifactId>
             <version>${dep.hive.version}</version>
             <exclusions>
+                <exclusion>
+                    <groupId>org.apache.parquet</groupId>
+                    <artifactId>parquet-hadoop-bundle</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.datanucleus</groupId>
                     <artifactId>datanucleus-api-jdo</artifactId>
@@ -367,19 +371,19 @@
 
         <!-- include the sources for Parquet -->
         <dependency>
-            <groupId>com.twitter</groupId>
+            <groupId>org.apache.parquet</groupId>
             <artifactId>parquet-common</artifactId>
             <version>${dep.parquet.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.twitter</groupId>
+            <groupId>org.apache.parquet</groupId>
             <artifactId>parquet-column</artifactId>
             <version>${dep.parquet.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.twitter</groupId>
+            <groupId>org.apache.parquet</groupId>
             <artifactId>parquet-hadoop</artifactId>
             <version>${dep.parquet.version}</version>
             <exclusions>
@@ -639,6 +643,7 @@
                                         <exclude>javolution/**</exclude>
                                         <exclude>org/apache/avro/**</exclude>
                                         <exclude>org/apache/thrift/**</exclude>
+                                        <exclude>parquet/**</exclude>
                                         <exclude>*.properties</exclude>
                                         <exclude>*.jar</exclude>
                                         <exclude>templates/release-notes.vm</exclude>
@@ -658,12 +663,6 @@
                                 </filter>
                                 <filter>
                                     <artifact>org.apache.hive.shims:*</artifact>
-                                    <excludes>
-                                        <exclude>**/*.class</exclude>
-                                    </excludes>
-                                </filter>
-                                <filter>
-                                    <artifact>com.twitter:parquet-*</artifact>
                                     <excludes>
                                         <exclude>**/*.class</exclude>
                                     </excludes>
