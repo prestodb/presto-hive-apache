@@ -637,7 +637,6 @@
                                         <exclude>javaewah/**</exclude>
                                         <exclude>javax/realtime/**</exclude>
                                         <exclude>javolution/**</exclude>
-                                        <exclude>org/apache/avro/**</exclude>
                                         <exclude>org/apache/thrift/**</exclude>
                                         <exclude>*.properties</exclude>
                                         <exclude>*.jar</exclude>
