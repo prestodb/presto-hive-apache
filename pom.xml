@@ -398,6 +398,19 @@
             </exclusions>
         </dependency>
 
+        <!-- include the sources for Avro -->
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.7.5</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!-- hadoop compilation dependency for CodecPool -->
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -637,7 +650,6 @@
                                         <exclude>javaewah/**</exclude>
                                         <exclude>javax/realtime/**</exclude>
                                         <exclude>javolution/**</exclude>
-                                        <exclude>org/apache/avro/**</exclude>
                                         <exclude>org/apache/thrift/**</exclude>
                                         <exclude>*.properties</exclude>
                                         <exclude>*.jar</exclude>
@@ -666,6 +678,13 @@
                                     <artifact>com.twitter:parquet-*</artifact>
                                     <excludes>
                                         <exclude>**/*.class</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.avro:avro</artifact>
+                                    <excludes>
+                                        <exclude>**/*.class</exclude>
+                                        <exclude>overview.html</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
