@@ -40,6 +40,7 @@ import org.apache.hadoop.hive.serde2.objectinspector.primitive.ShortObjectInspec
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.StringObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.TimestampObjectInspector;
 import org.apache.hadoop.hive.serde2.typeinfo.DecimalTypeInfo;
+import org.apache.hadoop.io.Text;
 import parquet.io.api.Binary;
 import parquet.io.api.RecordConsumer;
 import parquet.schema.GroupType;
@@ -315,16 +316,13 @@ public class DataWritableWriter
                 recordConsumer.addInteger(((ShortObjectInspector) inspector).get(value));
                 break;
             case STRING:
-                String v = ((StringObjectInspector) inspector).getPrimitiveJavaObject(value);
-                recordConsumer.addBinary(Binary.fromString(v));
+                recordConsumer.addBinary(textToBinary(((StringObjectInspector) inspector).getPrimitiveWritableObject(value)));
                 break;
             case CHAR:
-                String vChar = ((HiveCharObjectInspector) inspector).getPrimitiveJavaObject(value).getStrippedValue();
-                recordConsumer.addBinary(Binary.fromString(vChar));
+                recordConsumer.addBinary(textToBinary(((HiveCharObjectInspector) inspector).getPrimitiveWritableObject(value).getTextValue()));
                 break;
             case VARCHAR:
-                String vVarchar = ((HiveVarcharObjectInspector) inspector).getPrimitiveJavaObject(value).getValue();
-                recordConsumer.addBinary(Binary.fromString(vVarchar));
+                recordConsumer.addBinary(textToBinary(((HiveVarcharObjectInspector) inspector).getPrimitiveWritableObject(value).getTextValue()));
                 break;
             case BINARY:
                 byte[] vBinary = ((BinaryObjectInspector) inspector).getPrimitiveJavaObject(value);
@@ -346,6 +344,11 @@ public class DataWritableWriter
             default:
                 throw new IllegalArgumentException("Unsupported primitive data type: " + inspector.getPrimitiveCategory());
         }
+    }
+
+    private Binary textToBinary(Text t)
+    {
+        return Binary.fromByteArray(t.getBytes(), 0, t.getLength());
     }
 
     private Binary decimalToBinary(final HiveDecimal hiveDecimal, final DecimalTypeInfo decimalTypeInfo)
