@@ -365,6 +365,18 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.hive.hcatalog</groupId>
+            <artifactId>hive-hcatalog-core</artifactId>
+            <version>${dep.hive.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!-- include the sources for Parquet -->
         <dependency>
             <groupId>com.twitter</groupId>
