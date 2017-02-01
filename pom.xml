@@ -688,6 +688,12 @@
                                     </excludes>
                                 </filter>
                                 <filter>
+                                    <artifact>org.apache.hive.hcatalog:hive-hcatalog-core</artifact>
+                                    <excludes>
+                                        <exclude>org/apache/hive/hcatalog/data/JsonSerDe*.class</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
                                     <artifact>com.twitter:parquet-*</artifact>
                                     <excludes>
                                         <exclude>**/*.class</exclude>
