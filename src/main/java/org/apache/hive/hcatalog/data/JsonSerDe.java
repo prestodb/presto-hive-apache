@@ -136,7 +136,10 @@ public class JsonSerDe implements SerDe {
 
     rowTypeInfo = (StructTypeInfo) TypeInfoFactory.getStructTypeInfo(columnNames, columnTypes);
 
-    cachedObjectInspector = HCatRecordObjectInspectorFactory.getHCatRecordObjectInspector(rowTypeInfo);
+    // HIVE-15773
+    synchronized (HCatRecordObjectInspectorFactory.class) {
+      cachedObjectInspector = HCatRecordObjectInspectorFactory.getHCatRecordObjectInspector(rowTypeInfo);
+    }
     try {
       schema = HCatSchemaUtils.getHCatSchema(rowTypeInfo).get(0).getStructSubSchema();
       LOG.debug("schema : {}", schema);
