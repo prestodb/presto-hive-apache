@@ -589,12 +589,10 @@
                                 </excludes>
                             </artifactSet>
                             <relocations>
-                                <!-- required to read ORC metadata -->
                                 <relocation>
                                     <pattern>com.google.protobuf</pattern>
-                                    <shadedPattern>com.facebook.presto.hive.protobuf</shadedPattern>
+                                    <shadedPattern>${shadeBase}.com.google.protobuf</shadedPattern>
                                 </relocation>
-                                <!-- internal dependencies -->
                                 <relocation>
                                     <pattern>org.apache.commons</pattern>
                                     <shadedPattern>${shadeBase}.org.apache.commons</shadedPattern>
