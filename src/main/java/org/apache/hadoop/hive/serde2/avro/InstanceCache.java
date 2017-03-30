@@ -17,15 +17,16 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
- * This is a thread-safe, size-bounded fork of the Hive version.
+ * This is a thread-safe, time-bounded fork of the Hive version.
  * It also includes the correctness fix from HIVE-11288.
  */
 public abstract class InstanceCache<K, V>
 {
     private final Cache<K, V> cache = CacheBuilder.newBuilder()
-            .maximumSize(100_000)
+            .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
 
     protected InstanceCache() {}
