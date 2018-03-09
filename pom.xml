@@ -14,7 +14,7 @@
 
     <name>hive-apache</name>
     <description>Shaded version of Apache Hive for Presto</description>
-    <url>https://github.com/facebook/presto-hive-apache</url>
+    <url>https://github.com/prestodb/presto-hive-apache</url>
 
     <inceptionYear>2013</inceptionYear>
 
@@ -31,9 +31,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/facebook/presto-hive-apache.git</connection>
-        <developerConnection>scm:git:git://github.com/facebook/presto-hive-apache.git</developerConnection>
-        <url>https://github.com/facebook/presto-hive-apache</url>
+        <connection>scm:git:git://github.com/prestodb/presto-hive-apache.git</connection>
+        <developerConnection>scm:git:git://github.com/prestodb/presto-hive-apache.git</developerConnection>
+        <url>https://github.com/prestodb/presto-hive-apache</url>
         <tag>HEAD</tag>
     </scm>
 
