@@ -658,6 +658,8 @@
                                     <excludes>
                                         <exclude>org/apache/hadoop/hive/ql/io/CodecPool.class</exclude>
                                         <exclude>org/apache/hadoop/hive/serde2/avro/InstanceCache.class</exclude>
+                                        <exclude>org/apache/hive/common/util/TimestampParser.class</exclude>
+                                        <exclude>org/apache/hive/common/util/TimestampParser$*.class</exclude>
                                         <exclude>javaewah/**</exclude>
                                         <exclude>javax/realtime/**</exclude>
                                         <exclude>javolution/**</exclude>
