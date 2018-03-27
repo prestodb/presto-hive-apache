@@ -23,10 +23,12 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
+import org.joda.time.IllegalInstantException;
 import org.joda.time.MutableDateTime;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.format.DateTimeFormat;
@@ -35,6 +37,8 @@ import org.joda.time.format.DateTimeFormatterBuilder;
 import org.joda.time.format.DateTimeParser;
 import org.joda.time.format.DateTimeParserBucket;
 
+import static com.google.common.base.Preconditions.checkState;
+
 /**
  * Timestamp parser using Joda DateTimeFormatter. Parser accepts 0 or more date time format
  * patterns. If no format patterns are provided it will default to the normal Timestamp parsing.
@@ -42,12 +46,25 @@ import org.joda.time.format.DateTimeParserBucket;
  * "millis" to parse the string as milliseconds since Unix epoch.
  * Since this uses Joda DateTimeFormatter, this parser should be thread safe.
  */
-// TODO remove this class and relevant exclusion rules in pom.xml
+// TODO remove this class and relevant exclusion rules in pom.xml when upstream has updated
+// definition of `startingDateValue`
 public class TimestampParser {
 
     protected final static String[] stringArray = new String[] {};
     protected final static String millisFormatString = "millis";
-    protected final static DateTime startingDateValue = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+    // @Nullable
+    private final static DateTime startingDateValue = makeStartingDateValue();
+
+    // @Nullable
+    private static DateTime makeStartingDateValue() {
+        try {
+            return new DateTime(1970, 1, 1, 0, 0, 0, 0);
+        } catch (IllegalInstantException e) {
+            // 1970-01-01 00:00:00 did not exist in some zones. In these zones, we need to take different,
+            // less optimal parsing route.
+            return null;
+        }
+    }
 
     protected String[] formatStrings = null;
     protected DateTimeFormatter fmt = null;
@@ -79,7 +96,10 @@ public class TimestampParser {
                     parsers[idx] = DateTimeFormat.forPattern(formatString).getParser();
                 }
             }
-            fmt = new DateTimeFormatterBuilder().append(null, parsers).toFormatter();
+            fmt = new DateTimeFormatterBuilder()
+                    .append(null, parsers)
+                    .toFormatter()
+                    .withDefaultYear(1970);
         }
     }
 
@@ -91,6 +111,20 @@ public class TimestampParser {
      */
     public Timestamp parseTimestamp(String strValue) throws IllegalArgumentException {
         if (fmt != null) {
+            Optional<Timestamp> parsed = tryParseWithFormat(strValue);
+            if (parsed.isPresent()) {
+                return parsed.get();
+            }
+        }
+
+        // Otherwise try default timestamp parsing
+        return Timestamp.valueOf(strValue);
+    }
+
+    private Optional<Timestamp> tryParseWithFormat(String strValue) {
+        checkState(fmt != null);
+
+        if (startingDateValue != null) {
             // reset value in case any date fields are missing from the date pattern
             MutableDateTime mdt = new MutableDateTime(startingDateValue);
 
@@ -99,12 +133,17 @@ public class TimestampParser {
             int ret = fmt.parseInto(mdt, strValue, 0);
             // Only accept parse results if we parsed the entire string
             if (ret == strValue.length()) {
-                return new Timestamp(mdt.getMillis());
+                return Optional.of(new Timestamp(mdt.getMillis()));
             }
+            return Optional.empty();
         }
 
-        // Otherwise try default timestamp parsing
-        return Timestamp.valueOf(strValue);
+        try {
+            DateTime dt = fmt.parseDateTime(strValue);
+            return Optional.of(new Timestamp(dt.getMillis()));
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 
     /**
