@@ -377,6 +377,12 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+
         <!-- include the sources for Parquet -->
         <dependency>
             <groupId>com.twitter</groupId>
