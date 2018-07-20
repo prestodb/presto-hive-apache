@@ -13,20 +13,19 @@
  */
 package org.apache.hadoop.hive.serde2.avro;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.Cache;
 
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
- * This is a thread-safe, time-bounded fork of the Hive version.
+ * This is a thread-safe, size-bounded fork of the Hive version.
  * It also includes the correctness fix from HIVE-11288.
  */
 public abstract class InstanceCache<K, V>
 {
-    private final Cache<K, V> cache = CacheBuilder.newBuilder()
-            .expireAfterWrite(1, TimeUnit.MINUTES)
+    private final Cache<K, V> cache = Caffeine.newBuilder()
+            .maximumSize(100_000)
             .build();
 
     protected InstanceCache() {}
