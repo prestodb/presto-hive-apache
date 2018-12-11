@@ -522,8 +522,6 @@
                 <version>1.2</version>
                 <executions>
                     <execution>
-                        <id>default</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>enforce</goal>
                         </goals>
