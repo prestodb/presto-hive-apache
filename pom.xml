@@ -10,7 +10,7 @@
 
     <groupId>com.facebook.presto.hive</groupId>
     <artifactId>hive-apache</artifactId>
-    <version>2.3.4-1-SNAPSHOT</version>
+    <version>3.0.0-1-SNAPSHOT</version>
 
     <name>hive-apache</name>
     <description>Shaded version of Apache Hive for Presto</description>
@@ -43,14 +43,13 @@
 
         <shadeBase>com.facebook.presto.hive.\$internal</shadeBase>
 
-        <dep.hive.version>2.3.4</dep.hive.version>
+        <dep.hive.version>3.0.0</dep.hive.version>
 
         <dep.avro.version>1.7.7</dep.avro.version>
-        <dep.parquet.version>1.8.1</dep.parquet.version>
         <dep.jodd.version>3.5.2</dep.jodd.version>
+        <dep.parquet.version>1.9.0</dep.parquet.version>
         <dep.protobuf.version>2.5.0</dep.protobuf.version>
         <dep.slf4j.version>1.7.25</dep.slf4j.version>
-        <dep.snappy.version>0.2</dep.snappy.version>
     </properties>
 
     <dependencies>
@@ -76,32 +75,28 @@
         <!-- hive -->
         <dependency>
             <groupId>org.apache.hive</groupId>
-            <artifactId>hive-metastore</artifactId>
+            <artifactId>hive-standalone-metastore</artifactId>
             <version>${dep.hive.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.apache.hbase</groupId>
-                    <artifactId>hbase-client</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.hadoop</groupId>
-                    <artifactId>hadoop-archives</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.hadoop</groupId>
-                    <artifactId>hadoop-common</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.hadoop</groupId>
-                    <artifactId>hadoop-mapreduce-client-core</artifactId>
+                    <groupId>org.apache.hive</groupId>
+                    <artifactId>hive-metastore</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.hadoop</groupId>
                     <artifactId>hadoop-hdfs</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.apache.hadoop</groupId>
-                    <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
+                    <groupId>com.github.joshelser</groupId>
+                    <artifactId>dropwizard-metrics-hadoop-metrics2-reporter</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-1.2-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j-impl</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
@@ -110,30 +105,6 @@
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
                     <artifactId>httpclient</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-slf4j-impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.curator</groupId>
-                    <artifactId>curator-framework</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.zookeeper</groupId>
-                    <artifactId>zookeeper</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>co.cask.tephra</groupId>
-                    <artifactId>tephra-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>co.cask.tephra</groupId>
-                    <artifactId>tephra-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>co.cask.tephra</groupId>
-                    <artifactId>tephra-hbase-compat-1.0</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>javolution</groupId>
@@ -148,24 +119,12 @@
                     <artifactId>HikariCP</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>commons-cli</groupId>
-                    <artifactId>commons-cli</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>commons-dbcp</groupId>
                     <artifactId>commons-dbcp</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>commons-pool</groupId>
-                    <artifactId>commons-pool</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>org.apache.derby</groupId>
                     <artifactId>derby</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.jdo</groupId>
-                    <artifactId>jdo-api</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.datanucleus</groupId>
@@ -187,6 +146,10 @@
                     <groupId>org.antlr</groupId>
                     <artifactId>antlr-runtime</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>sqlline</groupId>
+                    <artifactId>sqlline</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -200,8 +163,40 @@
                     <artifactId>hive-service-rpc</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>org.apache.hive</groupId>
+                    <artifactId>hive-upgrade-acid</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.arrow</groupId>
+                    <artifactId>arrow-vector</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.apache.parquet</groupId>
                     <artifactId>parquet-hadoop-bundle</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.carrotsearch</groupId>
+                    <artifactId>hppc</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.vlkan</groupId>
+                    <artifactId>flatbuffers</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.curator</groupId>
+                    <artifactId>curator-framework</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.zookeeper</groupId>
+                    <artifactId>zookeeper</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j-impl</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>com.google.code.findbugs</groupId>
@@ -226,7 +221,15 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.hive</groupId>
+                    <artifactId>hive-upgrade-acid</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hive</groupId>
                     <artifactId>hive-vector-code-gen</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-yarn-registry</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.logging.log4j</groupId>
@@ -317,6 +320,14 @@
                     <artifactId>hive-service-rpc</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>org.apache.hive</groupId>
+                    <artifactId>hive-upgrade-acid</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-hdfs</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>com.github.joshelser</groupId>
                     <artifactId>dropwizard-metrics-hadoop-metrics2-reporter</artifactId>
                 </exclusion>
@@ -325,12 +336,36 @@
                     <artifactId>jline</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.eclipse.jetty.aggregate</groupId>
-                    <artifactId>jetty-all</artifactId>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.eclipse.jetty.orbit</groupId>
-                    <artifactId>javax.servlet</artifactId>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-http</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-rewrite</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-server</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-servlet</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-webapp</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javolution</groupId>
+                    <artifactId>javolution</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.sf.jpam</groupId>
+                    <artifactId>jpam</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.ant</groupId>
@@ -371,6 +406,14 @@
                 <exclusion>
                     <groupId>org.apache.hive</groupId>
                     <artifactId>hive-exec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hive</groupId>
+                    <artifactId>hive-metastore</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hive</groupId>
+                    <artifactId>hive-upgrade-acid</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.hadoop</groupId>
@@ -418,8 +461,8 @@
                     <artifactId>snappy-java</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.codehaus.jackson</groupId>
-                    <artifactId>jackson-core-asl</artifactId>
+                    <groupId>commons-pool</groupId>
+                    <artifactId>commons-pool</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -441,10 +484,6 @@
                     <groupId>org.apache.commons</groupId>
                     <artifactId>commons-compress</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.jackson</groupId>
-                    <artifactId>jackson-core-asl</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
 
@@ -457,10 +496,6 @@
                     <groupId>org.apache.avro</groupId>
                     <artifactId>avro-ipc</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.jackson</groupId>
-                    <artifactId>jackson-core-asl</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
 
@@ -468,12 +503,6 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>${dep.protobuf.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.iq80.snappy</groupId>
-            <artifactId>snappy</artifactId>
-            <version>${dep.snappy.version}</version>
         </dependency>
 
         <dependency>
@@ -568,6 +597,7 @@
                                 <excludes>
                                     <exclude>joda-time:joda-time</exclude>
                                     <exclude>org.apache.thrift:libthrift</exclude>
+                                    <exclude>io.airlift:aircompressor</exclude>
                                 </excludes>
                             </artifactSet>
                             <relocations>
@@ -588,6 +618,10 @@
                                     <shadedPattern>${shadeBase}.com.google.common</shadedPattern>
                                 </relocation>
                                 <relocation>
+                                    <pattern>com.google.thirdparty</pattern>
+                                    <shadedPattern>${shadeBase}.com.google.thirdparty</shadedPattern>
+                                </relocation>
+                                <relocation>
                                     <pattern>org.objectweb.asm</pattern>
                                     <shadedPattern>${shadeBase}.org.objectweb.asm</shadedPattern>
                                 </relocation>
@@ -604,20 +638,12 @@
                                     <shadedPattern>${shadeBase}.com.fasterxml.jackson</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>org.iq80.snappy</pattern>
-                                    <shadedPattern>${shadeBase}.org.iq80.snappy</shadedPattern>
-                                </relocation>
-                                <relocation>
                                     <pattern>org.json</pattern>
                                     <shadedPattern>${shadeBase}.org.json</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>au.com.bytecode.opencsv</pattern>
                                     <shadedPattern>${shadeBase}.au.com.bytecode.opencsv</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>io.airlift.compress</pattern>
-                                    <shadedPattern>${shadeBase}.io.airlift.compress</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>jodd</pattern>
@@ -628,20 +654,12 @@
                                     <shadedPattern>${shadeBase}.com.codahale.metrics</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>parquet.org.apache.thrift</pattern>
-                                    <shadedPattern>${shadeBase}.parquet.org.apache.thrift</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>parquet.org.slf4j</pattern>
-                                    <shadedPattern>${shadeBase}.parquet.org.slf4j</shadedPattern>
-                                </relocation>
-                                <relocation>
                                     <pattern>org.apache.parquet.it.unimi.dsi.fastutil</pattern>
                                     <shadedPattern>${shadeBase}.parquet.it.unimi.dsi.fastutil</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>shaded.parquet.org.codehaus.jackson</pattern>
-                                    <shadedPattern>${shadeBase}.parquet.org.codehaus.jackson</shadedPattern>
+                                    <pattern>shaded.parquet</pattern>
+                                    <shadedPattern>${shadeBase}.parquet</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.slf4j</pattern>
@@ -666,7 +684,6 @@
                                     <excludes>
                                         <exclude>hive-log4j2.properties</exclude>
                                         <exclude>parquet-logging.properties</exclude>
-                                        <exclude>org/apache/hive/common/util/TimestampParser*.class</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
@@ -676,11 +693,11 @@
                                         <exclude>hive-exec-log4j2.properties</exclude>
                                         <exclude>tez-container-log4j2.properties</exclude>
                                         <exclude>org/apache/hadoop/hive/ql/io/CodecPool*.class</exclude>
-                                        <exclude>org/apache/tez/dag/api/TaskSpecBuilder*.*</exclude>
+                                        <exclude>org/apache/tez/**</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
-                                    <artifact>org.apache.hive:hive-metastore</artifact>
+                                    <artifact>org.apache.hive:hive-standalone-metastore</artifact>
                                     <excludes>
                                         <exclude>package.jdo</exclude>
                                     </excludes>

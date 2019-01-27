@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,6 +20,7 @@ package org.apache.hive.hcatalog.data;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.CharacterCodingException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.StructField;
 import org.apache.hadoop.hive.serde2.objectinspector.StructObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.UnionObjectInspector;
+import org.apache.hadoop.hive.serde2.objectinspector.primitive.BinaryObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.BooleanObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.ByteObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.DateObjectInspector;
@@ -69,6 +71,7 @@ import org.apache.hadoop.hive.serde2.typeinfo.StructTypeInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfoFactory;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfoUtils;
+import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hive.common.util.HiveStringUtils;
@@ -106,10 +109,7 @@ public class JsonSerDe extends AbstractSerDe {
     List<TypeInfo> columnTypes;
     StructTypeInfo rowTypeInfo;
 
-
-    LOG.debug("Initializing JsonSerDe");
-    LOG.debug("props to serde: {}", tbl.entrySet());
-
+    LOG.debug("Initializing JsonSerDe: {}", tbl.entrySet());
 
     // Get column names and types
     String columnNameProperty = tbl.getProperty(serdeConstants.LIST_COLUMNS);
@@ -117,15 +117,15 @@ public class JsonSerDe extends AbstractSerDe {
     final String columnNameDelimiter = tbl.containsKey(serdeConstants.COLUMN_NAME_DELIMITER) ? tbl
         .getProperty(serdeConstants.COLUMN_NAME_DELIMITER) : String.valueOf(SerDeUtils.COMMA);
     // all table column names
-    if (columnNameProperty.length() == 0) {
-      columnNames = new ArrayList<String>();
+    if (columnNameProperty.isEmpty()) {
+      columnNames = Collections.emptyList();
     } else {
       columnNames = Arrays.asList(columnNameProperty.split(columnNameDelimiter));
     }
 
     // all column types
-    if (columnTypeProperty.length() == 0) {
-      columnTypes = new ArrayList<TypeInfo>();
+    if (columnTypeProperty.isEmpty()) {
+      columnTypes = Collections.emptyList();
     } else {
       columnTypes = TypeInfoUtils.getTypeInfosFromTypeString(columnTypeProperty);
     }
@@ -179,11 +179,9 @@ public class JsonSerDe extends AbstractSerDe {
       }
     } catch (JsonParseException e) {
       LOG.warn("Error [{}] parsing json text [{}].", e, t);
-      LOG.debug(null, e);
       throw new SerDeException(e);
     } catch (IOException e) {
       LOG.warn("Error [{}] parsing json text [{}].", e, t);
-      LOG.debug(null, e);
       throw new SerDeException(e);
     }
 
@@ -309,8 +307,20 @@ public class JsonSerDe extends AbstractSerDe {
       val = (valueToken == JsonToken.VALUE_NULL) ? null : p.getText();
       break;
     case BINARY:
-      throw new IOException("JsonSerDe does not support BINARY type");
-    case DATE:
+      String b = (valueToken == JsonToken.VALUE_NULL) ? null : p.getText();
+      if (b != null) {
+        try {
+          String t = Text.decode(b.getBytes(), 0, b.getBytes().length);
+          return t.getBytes();
+        } catch (CharacterCodingException e) {
+          LOG.warn("Error generating json binary type from object.", e);
+          return null;
+        }
+      } else {
+        val = null;
+      }
+      break;
+      case DATE:
       val = (valueToken == JsonToken.VALUE_NULL) ? null : Date.valueOf(p.getText());
       break;
     case TIMESTAMP:
@@ -402,7 +412,13 @@ public class JsonSerDe extends AbstractSerDe {
     case STRING:
       return s;
     case BINARY:
-      throw new IOException("JsonSerDe does not support BINARY type");
+      try {
+        String t = Text.decode(s.getBytes(), 0, s.getBytes().length);
+        return t.getBytes();
+      } catch (CharacterCodingException e) {
+        LOG.warn("Error generating json binary type from object.", e);
+        return null;
+      }
     case DATE:
       return Date.valueOf(s);
     case TIMESTAMP:
@@ -505,9 +521,12 @@ public class JsonSerDe extends AbstractSerDe {
           appendWithQuotes(sb, s);
           break;
         }
-        case BINARY: {
-          throw new IOException("JsonSerDe does not support BINARY type");
-        }
+        case BINARY:
+          byte[] b = ((BinaryObjectInspector) oi).getPrimitiveJavaObject(o);
+          Text txt = new Text();
+          txt.set(b, 0, b.length);
+          appendWithQuotes(sb, SerDeUtils.escapeString(txt.toString()));
+          break;
         case DATE:
           Date d = ((DateObjectInspector)poi).getPrimitiveJavaObject(o);
           appendWithQuotes(sb, d.toString());
