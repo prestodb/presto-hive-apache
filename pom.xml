@@ -47,7 +47,7 @@
 
         <dep.avro.version>1.7.7</dep.avro.version>
         <dep.jodd.version>3.5.2</dep.jodd.version>
-        <dep.parquet.version>1.9.0</dep.parquet.version>
+        <dep.parquet.version>1.10.1</dep.parquet.version>
         <dep.protobuf.version>2.5.0</dep.protobuf.version>
         <dep.slf4j.version>1.7.25</dep.slf4j.version>
     </properties>
