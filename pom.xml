@@ -43,7 +43,7 @@
         <shadeBase>com.facebook.presto.hive.\$internal</shadeBase>
         <dep.slf4j.version>1.6.6</dep.slf4j.version>
         <dep.hive.version>1.2.2</dep.hive.version>
-        <dep.parquet.version>1.6.0</dep.parquet.version>
+        <dep.parquet.version>1.10.0</dep.parquet.version>
     </properties>
 
     <dependencies>
@@ -379,19 +379,17 @@
 
         <!-- include the sources for Parquet -->
         <dependency>
-            <groupId>com.twitter</groupId>
+            <groupId>org.apache.parquet</groupId>
             <artifactId>parquet-common</artifactId>
             <version>${dep.parquet.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>com.twitter</groupId>
+            <groupId>org.apache.parquet</groupId>
             <artifactId>parquet-column</artifactId>
             <version>${dep.parquet.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>com.twitter</groupId>
+            <groupId>org.apache.parquet</groupId>
             <artifactId>parquet-hadoop</artifactId>
             <version>${dep.parquet.version}</version>
             <exclusions>
