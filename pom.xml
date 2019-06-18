@@ -468,6 +468,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-avro</artifactId>
+            <version>${dep.parquet.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
             <version>${dep.avro.version}</version>
@@ -662,6 +668,10 @@
                                     <shadedPattern>${shadeBase}.avro</shadedPattern>
                                 </relocation>
                                 <relocation>
+                                    <pattern>it.unimi.dsi.fastutil</pattern>
+                                    <shadedPattern>${shadeBase}.it.unimi.dsi.fastutil</shadedPattern>
+                                </relocation>
+                                <relocation>
                                     <pattern>org.apache.parquet.it.unimi.dsi.fastutil</pattern>
                                     <shadedPattern>${shadeBase}.parquet.it.unimi.dsi.fastutil</shadedPattern>
                                 </relocation>
@@ -729,9 +739,32 @@
                                     </excludes>
                                 </filter>
                                 <filter>
+                                    <artifact>org.apache.parquet:parquet-avro</artifact>
+                                    <excludes>
+                                        <exclude>stringBehavior.avsc</exclude>
+                                        <exclude>avro/org/apache/parquet/avro/StringBehaviorTest.java</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
                                     <artifact>org.apache.commons:commons-lang3</artifact>
                                     <excludes>
                                         <exclude>templates/release-notes.vm</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>it.unimi.dsi:fastutil</artifact>
+                                    <excludes>
+                                        <exclude>CHANGES</exclude>
+                                        <exclude>LICENSE-2.0</exclude>
+                                        <exclude>README.md</exclude>
+                                        <exclude>build.properties</exclude>
+                                        <exclude>build.xml</exclude>
+                                        <exclude>drv/**</exclude>
+                                        <exclude>fastutil.bnd</exclude>
+                                        <exclude>gencsource.sh</exclude>
+                                        <exclude>ivy.xml</exclude>
+                                        <exclude>makefile</exclude>
+                                        <exclude>pom.xml</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
