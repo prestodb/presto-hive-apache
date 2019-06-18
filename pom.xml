@@ -45,7 +45,7 @@
 
         <dep.hive.version>3.0.0</dep.hive.version>
 
-        <dep.avro.version>1.7.7</dep.avro.version>
+        <dep.avro.version>1.8.2</dep.avro.version>
         <dep.jodd.version>3.5.2</dep.jodd.version>
         <dep.parquet.version>1.10.1</dep.parquet.version>
         <dep.protobuf.version>2.5.0</dep.protobuf.version>
@@ -646,12 +646,20 @@
                                     <shadedPattern>${shadeBase}.au.com.bytecode.opencsv</shadedPattern>
                                 </relocation>
                                 <relocation>
+                                    <pattern>org.tukaani.xz</pattern>
+                                    <shadedPattern>${shadeBase}.org.tukaani.xz</shadedPattern>
+                                </relocation>
+                                <relocation>
                                     <pattern>jodd</pattern>
                                     <shadedPattern>${shadeBase}.jodd</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.codahale.metrics</pattern>
                                     <shadedPattern>${shadeBase}.com.codahale.metrics</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>avro.shaded</pattern>
+                                    <shadedPattern>${shadeBase}.avro</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.apache.parquet.it.unimi.dsi.fastutil</pattern>
