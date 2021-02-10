@@ -18,7 +18,6 @@
  */
 package org.apache.hive.hcatalog.data;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.CharacterCodingException;
 import java.sql.Date;
@@ -169,7 +168,7 @@ public class JsonSerDe extends AbstractSerDe {
     JsonParser p;
     List<Object> r = new ArrayList<Object>(Collections.nCopies(columnNames.size(), null));
     try {
-      p = jsonFactory.createJsonParser(new ByteArrayInputStream((t.getBytes())));
+      p = jsonFactory.createJsonParser(t.getBytes(), 0, t.getLength());
       if (p.nextToken() != JsonToken.START_OBJECT) {
         throw new IOException("Start token not found where expected");
       }
