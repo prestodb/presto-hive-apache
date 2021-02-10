@@ -149,7 +149,8 @@ public class JsonSerDe extends AbstractSerDe {
       throw new SerDeException(e);
     }
 
-    jsonFactory = new JsonFactory();
+    // Interning all encountered field names improves little compared to the per-factory canonical name cache and can cause native memory issues
+    jsonFactory = new JsonFactory().disable(JsonParser.Feature.INTERN_FIELD_NAMES);
     tsParser = new TimestampParser(
         HiveStringUtils.splitAndUnEscape(tbl.getProperty(serdeConstants.TIMESTAMP_FORMATS)));
   }
