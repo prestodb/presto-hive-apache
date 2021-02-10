@@ -178,6 +178,9 @@ public class JsonSerDe extends AbstractSerDe {
         // iterate through each token, and create appropriate object here.
         populateRecord(r, token, p, schema);
       }
+      // Calling close on the parser even though there is no real InputStream backing it is necessary so that
+      // entries in this parser instance's canonical field name cache can be reused on the next invocation
+      p.close();
     } catch (JsonParseException e) {
       LOG.warn("Error [{}] parsing json text [{}].", e, t);
       throw new SerDeException(e);
