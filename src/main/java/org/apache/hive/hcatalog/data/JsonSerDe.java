@@ -1,18 +1,24 @@
 /*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.apache.hive.hcatalog.data;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.CharacterCodingException;
 import java.sql.Date;
@@ -131,10 +137,7 @@ public class JsonSerDe extends AbstractSerDe {
 
     rowTypeInfo = (StructTypeInfo) TypeInfoFactory.getStructTypeInfo(columnNames, columnTypes);
 
-    // HIVE-15773
-    synchronized (HCatRecordObjectInspectorFactory.class) {
-      cachedObjectInspector = HCatRecordObjectInspectorFactory.getHCatRecordObjectInspector(rowTypeInfo);
-    }
+    cachedObjectInspector = HCatRecordObjectInspectorFactory.getHCatRecordObjectInspector(rowTypeInfo);
     try {
       schema = HCatSchemaUtils.getHCatSchema(rowTypeInfo).get(0).getStructSubSchema();
       LOG.debug("schema : {}", schema);
@@ -143,8 +146,7 @@ public class JsonSerDe extends AbstractSerDe {
       throw new SerDeException(e);
     }
 
-    // Interning all encountered field names improves little compared to the per-factory canonical name cache and can cause native memory issues
-    jsonFactory = new JsonFactory().disable(JsonParser.Feature.INTERN_FIELD_NAMES);
+    jsonFactory = new JsonFactory();
     tsParser = new TimestampParser(
         HiveStringUtils.splitAndUnEscape(tbl.getProperty(serdeConstants.TIMESTAMP_FORMATS)));
   }
@@ -163,7 +165,7 @@ public class JsonSerDe extends AbstractSerDe {
     JsonParser p;
     List<Object> r = new ArrayList<Object>(Collections.nCopies(columnNames.size(), null));
     try {
-      p = jsonFactory.createJsonParser(t.getBytes(), 0, t.getLength());
+      p = jsonFactory.createJsonParser(new ByteArrayInputStream((t.getBytes())));
       if (p.nextToken() != JsonToken.START_OBJECT) {
         throw new IOException("Start token not found where expected");
       }
@@ -172,9 +174,6 @@ public class JsonSerDe extends AbstractSerDe {
         // iterate through each token, and create appropriate object here.
         populateRecord(r, token, p, schema);
       }
-      // Calling close on the parser even though there is no real InputStream backing it is necessary so that
-      // entries in this parser instance's canonical field name cache can be reused on the next invocation
-      p.close();
     } catch (JsonParseException e) {
       LOG.warn("Error [{}] parsing json text [{}].", e, t);
       throw new SerDeException(e);
