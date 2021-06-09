@@ -51,9 +51,9 @@
 
         <dep.hive.version>3.0.0</dep.hive.version>
 
-        <dep.avro.version>1.9.1</dep.avro.version>
+        <dep.avro.version>1.9.2</dep.avro.version>
         <dep.jodd.version>3.5.2</dep.jodd.version>
-        <dep.parquet.version>1.11.0</dep.parquet.version>
+        <dep.parquet.version>1.11.1</dep.parquet.version>
         <dep.protobuf.version>2.5.0</dep.protobuf.version>
         <dep.slf4j.version>1.7.25</dep.slf4j.version>
 
@@ -546,6 +546,10 @@
                     <groupId>commons-codec</groupId>
                     <artifactId>commons-codec</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -652,6 +656,9 @@
                                     <exclude>joda-time:joda-time</exclude>
                                     <exclude>org.apache.thrift:libthrift</exclude>
                                     <exclude>io.airlift:aircompressor</exclude>
+                                    <exclude>org.eclipse.jetty:*</exclude>
+                                    <exclude>javax.annotation:javax.annotation-api</exclude>
+                                    <exclude>javax.servlet:javax.servlet-api</exclude>
                                 </excludes>
                             </artifactSet>
                             <relocations>
