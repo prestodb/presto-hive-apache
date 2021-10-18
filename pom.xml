@@ -790,7 +790,11 @@
                                 <filter>
                                     <artifact>org.apache.hive:hive-serde</artifact>
                                     <excludes>
+                                        <exclude>org/apache/hadoop/hive/serde2/avro/AvroDeserializer*.class</exclude>
+                                        <exclude>org/apache/hadoop/hive/serde2/avro/AvroSerdeUtils*.class</exclude>
                                         <exclude>org/apache/hadoop/hive/serde2/avro/InstanceCache*.class</exclude>
+                                        <exclude>org/apache/hadoop/hive/serde2/avro/SchemaToTypeInfo*.class</exclude>
+                                        <exclude>org/apache/hadoop/hive/serde2/avro/TypeInfoToSchema*.class</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
