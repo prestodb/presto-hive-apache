@@ -516,6 +516,10 @@
                     <groupId>commons-pool</groupId>
                     <artifactId>commons-pool</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.github.luben</groupId>
+                    <artifactId>zstd-jni</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -523,6 +527,13 @@
             <groupId>org.apache.parquet</groupId>
             <artifactId>parquet-avro</artifactId>
             <version>${dep.parquet.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.luben</groupId>
+                    <artifactId>zstd-jni</artifactId>
+                </exclusion>
+            </exclusions>
+
         </dependency>
 
         <dependency>
