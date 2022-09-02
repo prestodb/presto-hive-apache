@@ -53,7 +53,7 @@
 
         <dep.avro.version>1.10.1</dep.avro.version>
         <dep.jodd.version>3.5.2</dep.jodd.version>
-        <dep.parquet.version>1.12.2</dep.parquet.version>
+        <dep.parquet.version>1.12.3</dep.parquet.version>
         <dep.protobuf.version>2.5.0</dep.protobuf.version>
         <dep.slf4j.version>1.7.25</dep.slf4j.version>
 
