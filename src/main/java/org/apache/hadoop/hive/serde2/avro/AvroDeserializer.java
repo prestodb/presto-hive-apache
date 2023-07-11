@@ -16,6 +16,7 @@ package org.apache.hadoop.hive.serde2.avro;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.Object;
 import java.nio.ByteBuffer;
 import java.rmi.server.UID;
 import java.sql.Date;
@@ -307,8 +308,8 @@ class AvroDeserializer {
     private Object deserializeStruct(GenericData.Record datum, Schema fileSchema, StructTypeInfo columnType)
             throws AvroSerdeException {
         // No equivalent Java type for the backing structure, need to recurse and build a list
-        ArrayList<TypeInfo> innerFieldTypes = columnType.getAllStructFieldTypeInfos();
-        ArrayList<String> innerFieldNames = columnType.getAllStructFieldNames();
+        List<TypeInfo> innerFieldTypes = columnType.getAllStructFieldTypeInfos();
+        List<String> innerFieldNames = columnType.getAllStructFieldNames();
         List<Object> innerObjectRow = new ArrayList<Object>(innerFieldTypes.size());
 
         return workerBase(innerObjectRow, fileSchema, innerFieldNames, innerFieldTypes, datum);
@@ -328,16 +329,16 @@ class AvroDeserializer {
     private Object deserializeList(Object datum, Schema fileSchema, Schema recordSchema,
             ListTypeInfo columnType) throws AvroSerdeException {
         // Need to check the original schema to see if this is actually a Fixed.
-        if(recordSchema.getType().equals(Schema.Type.FIXED)) {
+        if(recordSchema.getType().equals(Type.FIXED)) {
             // We're faking out Hive to work through a type system impedence mismatch.
             // Pull out the backing array and convert to a list.
-            GenericData.Fixed fixed = (GenericData.Fixed) datum;
+            Fixed fixed = (Fixed) datum;
             List<Byte> asList = new ArrayList<Byte>(fixed.bytes().length);
             for(int j = 0; j < fixed.bytes().length; j++) {
                 asList.add(fixed.bytes()[j]);
             }
             return asList;
-        } else if(recordSchema.getType().equals(Schema.Type.BYTES)) {
+        } else if(recordSchema.getType().equals(Type.BYTES)) {
             // This is going to be slow... hold on.
             ByteBuffer bb = (ByteBuffer)datum;
             List<Byte> asList = new ArrayList<Byte>(bb.capacity());
