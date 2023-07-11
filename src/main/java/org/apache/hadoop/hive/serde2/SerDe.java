@@ -18,5 +18,4 @@ package org.apache.hadoop.hive.serde2;
  */
 @Deprecated
 public interface SerDe
-        extends Deserializer, Serializer
 {}

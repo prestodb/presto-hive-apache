@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -98,8 +99,9 @@ public class JsonSerDe extends AbstractSerDe {
   private TimestampParser tsParser;
 
   @Override
-  public void initialize(Configuration conf, Properties tbl)
+  public void initialize(Configuration conf, Properties tbl, Properties partitionProperties)
     throws SerDeException {
+    this.configuration = Optional.of(conf);
     List<TypeInfo> columnTypes;
     StructTypeInfo rowTypeInfo;
 
@@ -526,11 +528,11 @@ public class JsonSerDe extends AbstractSerDe {
           appendWithQuotes(sb, SerDeUtils.escapeString(txt.toString()));
           break;
         case DATE:
-          Date d = ((DateObjectInspector)poi).getPrimitiveJavaObject(o);
+          org.apache.hadoop.hive.common.type.Date d = ((DateObjectInspector)poi).getPrimitiveJavaObject(o);
           appendWithQuotes(sb, d.toString());
           break;
         case TIMESTAMP: {
-          Timestamp t = ((TimestampObjectInspector) poi).getPrimitiveJavaObject(o);
+          Timestamp t = ((TimestampObjectInspector) poi).getPrimitiveJavaObject(o).toSqlTimestamp();
           appendWithQuotes(sb, t.toString());
           break;
         }
@@ -668,6 +670,10 @@ public class JsonSerDe extends AbstractSerDe {
   public SerDeStats getSerDeStats() {
     // no support for statistics yet
     return null;
+  }
+  @Override
+  public Optional<Configuration> getConfiguration() {
+    return configuration;
   }
 
 }

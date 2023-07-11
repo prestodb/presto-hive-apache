@@ -10,7 +10,7 @@
 
     <groupId>com.facebook.presto.hive</groupId>
     <artifactId>hive-apache</artifactId>
-    <version>3.0.0-8-SNAPSHOT</version>
+    <version>4.0.1</version>
 
     <name>hive-apache</name>
     <description>Shaded version of Apache Hive for Presto</description>
@@ -49,12 +49,12 @@
 
         <shadeBase>com.facebook.presto.hive.\$internal</shadeBase>
 
-        <dep.hive.version>3.0.0</dep.hive.version>
+        <dep.hive.version>4.0.0-alpha-2</dep.hive.version>
 
         <dep.avro.version>1.10.1</dep.avro.version>
         <dep.jodd.version>3.5.2</dep.jodd.version>
         <dep.parquet.version>1.12.2</dep.parquet.version>
-        <dep.protobuf.version>2.5.0</dep.protobuf.version>
+        <dep.protobuf.version>3.21.4</dep.protobuf.version>
         <dep.slf4j.version>1.7.25</dep.slf4j.version>
 
         <dep.nexus-staging-plugin.version>1.6.8</dep.nexus-staging-plugin.version>
@@ -83,7 +83,7 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.7</version>
+            <version>1.15</version>
         </dependency>
 
         <dependency>
@@ -98,10 +98,22 @@
             <version>1.9.13</version>
         </dependency>
 
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+            <version>8.5.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.21</version>
+        </dependency>
+
         <!-- hive -->
         <dependency>
             <groupId>org.apache.hive</groupId>
-            <artifactId>hive-standalone-metastore</artifactId>
+            <artifactId>hive-standalone-metastore-common</artifactId>
             <version>${dep.hive.version}</version>
             <exclusions>
                 <exclusion>
@@ -196,6 +208,14 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>animal-sniffer-annotations</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.zookeeper</groupId>
+                    <artifactId>zookeeper</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.inject</groupId>
+                    <artifactId>guice</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -255,7 +275,6 @@
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-exec</artifactId>
             <version>${dep.hive.version}</version>
-            <classifier>core</classifier>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.hive</groupId>
@@ -353,6 +372,26 @@
                     <groupId>stax</groupId>
                     <artifactId>stax-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.xerial.snappy</groupId>
+                    <artifactId>snappy-java</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                    <artifactId>jackson-jaxrs-json-provider</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.module</groupId>
+                    <artifactId>jackson-module-jaxb-annotation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                    <artifactId>jackson-jaxrs-base</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -436,6 +475,10 @@
                 <exclusion>
                     <groupId>commons-cli</groupId>
                     <artifactId>commons-cli</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -606,6 +649,25 @@
             </exclusions>
         </dependency>
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-common</artifactId>
+                <version>3.3.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
@@ -625,6 +687,11 @@
                         <requireJavaVersion>
                             <version>${project.build.targetJdk}</version>
                         </requireJavaVersion>
+                        <bannedDependencies>
+                            <excludes>
+                                <exclude>cglib:cglib:jar:2.2.2</exclude>
+                            </excludes>
+                        </bannedDependencies>
                     </rules>
                 </configuration>
             </plugin>
@@ -662,7 +729,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -682,6 +749,9 @@
                                     <exclude>org.eclipse.jetty:*</exclude>
                                     <exclude>javax.annotation:javax.annotation-api</exclude>
                                     <exclude>javax.servlet:javax.servlet-api</exclude>
+                                    <exclude>com.google.inject:Guice</exclude>
+                                    <exclude>org.apache.httpcomponents:httpcore</exclude>
+                                    <exclude>org.apache.httpcomponents:httpclient</exclude>
                                 </excludes>
                             </artifactSet>
                             <relocations>
@@ -780,6 +850,13 @@
                                     <excludes>
                                         <exclude>hive-log4j2.properties</exclude>
                                         <exclude>parquet-logging.properties</exclude>
+                                        <exclude>joda-time:joda-time</exclude>
+                                        <exclude>org.apache.thrift:libthrift</exclude>
+                                        <exclude>io.airlift:aircompressor</exclude>
+                                        <exclude>org.eclipse.jetty:*</exclude>
+                                        <exclude>javax.annotation:javax.annotation-api</exclude>
+                                        <exclude>javax.servlet:javax.servlet-api</exclude>
+                                        <exclude>com.google.inject:Guice</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
@@ -790,12 +867,26 @@
                                         <exclude>tez-container-log4j2.properties</exclude>
                                         <exclude>org/apache/hadoop/hive/ql/io/CodecPool*.class</exclude>
                                         <exclude>org/apache/tez/**</exclude>
+                                        <exclude>joda-time:joda-time</exclude>
+                                        <exclude>org.apache.thrift:libthrift</exclude>
+                                        <exclude>io.airlift:aircompressor</exclude>
+                                        <exclude>org.eclipse.jetty:*</exclude>
+                                        <exclude>javax.annotation:javax.annotation-api</exclude>
+                                        <exclude>javax.servlet:javax.servlet-api</exclude>
+                                        <exclude>com.google.inject:Guice</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
-                                    <artifact>org.apache.hive:hive-standalone-metastore</artifact>
+                                    <artifact>org.apache.hive:hive-standalone-metastore-common</artifact>
                                     <excludes>
                                         <exclude>package.jdo</exclude>
+                                        <exclude>joda-time:joda-time</exclude>
+                                        <exclude>org.apache.thrift:libthrift</exclude>
+                                        <exclude>io.airlift:aircompressor</exclude>
+                                        <exclude>org.eclipse.jetty:*</exclude>
+                                        <exclude>javax.annotation:javax.annotation-api</exclude>
+                                        <exclude>javax.servlet:javax.servlet-api</exclude>
+                                        <exclude>com.google.inject:Guice</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
@@ -806,6 +897,13 @@
                                         <exclude>org/apache/hadoop/hive/serde2/avro/InstanceCache*.class</exclude>
                                         <exclude>org/apache/hadoop/hive/serde2/avro/SchemaToTypeInfo*.class</exclude>
                                         <exclude>org/apache/hadoop/hive/serde2/avro/TypeInfoToSchema*.class</exclude>
+                                        <exclude>joda-time:joda-time</exclude>
+                                        <exclude>org.apache.thrift:libthrift</exclude>
+                                        <exclude>io.airlift:aircompressor</exclude>
+                                        <exclude>org.eclipse.jetty:*</exclude>
+                                        <exclude>javax.annotation:javax.annotation-api</exclude>
+                                        <exclude>javax.servlet:javax.servlet-api</exclude>
+                                        <exclude>com.google.inject:Guice</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
