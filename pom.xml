@@ -49,7 +49,7 @@
 
         <shadeBase>com.facebook.presto.hive.\$internal</shadeBase>
 
-        <dep.hive.version>3.0.0</dep.hive.version>
+        <dep.hive.version>3.1.1</dep.hive.version>
 
         <dep.avro.version>1.11.1</dep.avro.version>
         <dep.jodd.version>3.5.2</dep.jodd.version>
