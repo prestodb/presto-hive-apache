@@ -51,7 +51,7 @@
 
         <dep.hive.version>3.0.0</dep.hive.version>
 
-        <dep.avro.version>1.11.1</dep.avro.version>
+        <dep.avro.version>1.11.3</dep.avro.version>
         <dep.jodd.version>3.5.2</dep.jodd.version>
         <dep.parquet.version>1.13.1</dep.parquet.version>
         <dep.protobuf.version>2.5.0</dep.protobuf.version>
