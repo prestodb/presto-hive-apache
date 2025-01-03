@@ -10,7 +10,7 @@
 
     <groupId>com.facebook.presto.hive</groupId>
     <artifactId>hive-apache</artifactId>
-    <version>3.0.0-13-SNAPSHOT</version>
+    <version>4.0.1-1-SNAPSHOT</version>
 
     <name>hive-apache</name>
     <description>Shaded version of Apache Hive for Presto</description>
@@ -50,16 +50,102 @@
 
         <shadeBase>com.facebook.presto.hive.\$internal</shadeBase>
 
-        <dep.hive.version>3.0.0</dep.hive.version>
+        <dep.hive.version>4.0.1</dep.hive.version>
 
         <dep.avro.version>1.12.1</dep.avro.version>
-        <dep.jodd.version>3.5.2</dep.jodd.version>
+        <dep.jodd.version>6.0.0</dep.jodd.version>
         <dep.parquet.version>1.16.0</dep.parquet.version>
-        <dep.protobuf.version>2.5.0</dep.protobuf.version>
+        <dep.protobuf.version>3.25.5</dep.protobuf.version>
         <dep.slf4j.version>2.0.16</dep.slf4j.version>
+        <datasketches.version>1.2.0</datasketches.version>
 
         <dep.central-publishing.version>0.8.0</dep.central-publishing.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>io.dropwizard.metrics</groupId>
+                <artifactId>metrics-core</artifactId>
+                <version>3.2.4</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.16.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop.thirdparty</groupId>
+                <artifactId>hadoop-shaded-protobuf_3_7</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-servlet</artifactId>
+                <version>1.19.4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-json-provider</artifactId>
+                <version>2.12.7</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jaxb-annotations</artifactId>
+                <version>2.12.7</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>4.4</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-base</artifactId>
+                <version>2.12.7</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.16.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.calcite</groupId>
+                <artifactId>calcite-core</artifactId>
+                <version>1.33.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.janino</groupId>
+                <artifactId>commons-compiler</artifactId>
+                <version>3.1.8</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.janino</groupId>
+                <artifactId>janino</artifactId>
+                <version>3.1.8</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.datasketches</groupId>
+                <artifactId>datasketches-hive</artifactId>
+                <version>${datasketches.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>3.6.1</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <!-- discard logging from hive -->
@@ -84,7 +170,7 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.7</version>
+            <version>1.15</version>
         </dependency>
 
         <dependency>
@@ -102,9 +188,41 @@
         <!-- hive -->
         <dependency>
             <groupId>org.apache.hive</groupId>
-            <artifactId>hive-standalone-metastore</artifactId>
+            <artifactId>hive-standalone-metastore-common</artifactId>
             <version>${dep.hive.version}</version>
             <exclusions>
+                <exclusion>
+                    <groupId>com.github.ben-manes.caffeine</groupId>
+                    <artifactId>caffeine</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>grpc-netty-shaded</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>grpc-protobuf</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.grpc</groupId>
+                    <artifactId>grpc-stub</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.threeten</groupId>
+                    <artifactId>threeten-extra</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jetbrains</groupId>
+                    <artifactId>annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.checkerframework</groupId>
+                    <artifactId>checker-qual</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.zookeeper</groupId>
+                    <artifactId>zookeeper</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.apache.hive</groupId>
                     <artifactId>hive-metastore</artifactId>
@@ -112,6 +230,10 @@
                 <exclusion>
                     <groupId>org.apache.hadoop</groupId>
                     <artifactId>hadoop-hdfs</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-client-api</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>com.github.joshelser</groupId>
@@ -206,6 +328,10 @@
             <version>${dep.hive.version}</version>
             <exclusions>
                 <exclusion>
+                    <groupId>com.esri.geometry</groupId>
+                    <artifactId>esri-geometry-api</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.apache.hive</groupId>
                     <artifactId>hive-service-rpc</artifactId>
                 </exclusion>
@@ -258,6 +384,42 @@
             <version>${dep.hive.version}</version>
             <classifier>core</classifier>
             <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.ws.rs</groupId>
+                    <artifactId>jsr311-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.jayway.jsonpath</groupId>
+                    <artifactId>json-path</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.atlas</groupId>
+                    <artifactId>atlas-client-v2</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.atlas</groupId>
+                    <artifactId>atlas-client-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.atlas</groupId>
+                    <artifactId>atlas-intg</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-math3</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.apache.hive</groupId>
                     <artifactId>hive-ant</artifactId>
@@ -359,9 +521,35 @@
 
         <dependency>
             <groupId>org.apache.hive</groupId>
+            <artifactId>hive-parser</artifactId>
+            <version>${dep.hive.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr-runtime</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-udf</artifactId>
+            <version>${dep.hive.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hive</groupId>
             <artifactId>hive-common</artifactId>
             <version>${dep.hive.version}</version>
             <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-math3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.tez</groupId>
+                    <artifactId>tez-api</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.apache.hive</groupId>
                     <artifactId>hive-service-rpc</artifactId>
@@ -442,6 +630,66 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-llap-client</artifactId>
+            <version>${dep.hive.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.hive</groupId>
+                    <artifactId>hive-llap-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.zookeeper</groupId>
+                    <artifactId>zookeeper</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.curator</groupId>
+                    <artifactId>apache-curator</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hive.hcatalog</groupId>
+                    <artifactId>hive-hcatalog-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.parquet</groupId>
+                    <artifactId>parquet-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.parquet</groupId>
+                    <artifactId>parquet-column</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.parquet</groupId>
+                    <artifactId>parquet-hadoop</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.parquet</groupId>
+                    <artifactId>parquet-avro</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.avro</groupId>
+                    <artifactId>avro</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.avro</groupId>
+                    <artifactId>avro-mapred</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jodd</groupId>
+                    <artifactId>jodd-util</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.hive.hcatalog</groupId>
             <artifactId>hive-hcatalog-core</artifactId>
             <version>${dep.hive.version}</version>
@@ -481,6 +729,30 @@
                 <exclusion>
                     <groupId>org.apache.hadoop</groupId>
                     <artifactId>hadoop-hdfs</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-llap-common</artifactId>
+            <version>${dep.hive.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hive</groupId>
+                    <artifactId>hive-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hive</groupId>
+                    <artifactId>hive-serde</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -585,8 +857,72 @@
 
         <dependency>
             <groupId>org.jodd</groupId>
-            <artifactId>jodd-core</artifactId>
+            <artifactId>jodd-util</artifactId>
             <version>${dep.jodd.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.calcite</groupId>
+            <artifactId>calcite-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-math3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.jayway.jsonpath</groupId>
+                    <artifactId>json-path</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.checkerframework</groupId>
+                    <artifactId>checker-qual</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.locationtech.jts</groupId>
+                    <artifactId>jts-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.locationtech.jts.io</groupId>
+                    <artifactId>jts-io-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.errorprone</groupId>
+                    <artifactId>error_prone_annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents.client5</groupId>
+                    <artifactId>httpclient5</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents.core5</groupId>
+                    <artifactId>httpcore5</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents.core5</groupId>
+                    <artifactId>httpcore5-h2</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.datasketches</groupId>
+            <artifactId>datasketches-hive</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- hadoop compilation dependency for CodecPool -->
@@ -605,6 +941,11 @@
                     <artifactId>jets3t</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
         </dependency>
     </dependencies>
 
@@ -625,6 +966,11 @@
                         <requireJavaVersion>
                             <version>${project.build.targetJdk}</version>
                         </requireJavaVersion>
+                        <bannedDependencies>
+                            <excludes>
+                                <exclude>cglib:cglib:jar:2.2.2</exclude>
+                            </excludes>
+                        </bannedDependencies>
                     </rules>
                 </configuration>
             </plugin>
@@ -683,6 +1029,10 @@
                             </artifactSet>
                             <relocations>
                                 <relocation>
+                                    <pattern>org.apache.calcite</pattern>
+                                    <shadedPattern>${shadeBase}.org.apache.calcite</shadedPattern>
+                                </relocation>
+                                <relocation>
                                     <pattern>com.google.protobuf</pattern>
                                     <shadedPattern>${shadeBase}.com.google.protobuf</shadedPattern>
                                 </relocation>
@@ -703,12 +1053,28 @@
                                     <shadedPattern>${shadeBase}.com.google.thirdparty</shadedPattern>
                                 </relocation>
                                 <relocation>
+                                    <pattern>com.google.flatbuffers</pattern>
+                                    <shadedPattern>${shadeBase}.com.google.flatbuffers</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google.uzaygezen.core</pattern>
+                                    <shadedPattern>${shadeBase}.com.google.uzaygezen.core</shadedPattern>
+                                </relocation>
+                                <relocation>
                                     <pattern>org.objectweb.asm</pattern>
                                     <shadedPattern>${shadeBase}.org.objectweb.asm</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.objenesis</pattern>
                                     <shadedPattern>${shadeBase}.org.objenesis</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.codehaus.commons</pattern>
+                                    <shadedPattern>${shadeBase}.org.codehaus.commons</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.codehaus.janino</pattern>
+                                    <shadedPattern>${shadeBase}.org.codehaus.janino</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.codehaus.jackson</pattern>
@@ -758,12 +1124,93 @@
                                     <pattern>org.slf4j</pattern>
                                     <shadedPattern>${shadeBase}.org.slf4j</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>com.amazonaws.secretsmanager.caching</pattern>
+                                    <shadedPattern>${shadeBase}.com.amazonaws.secretsmanager.caching</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.sun.jersey</pattern>
+                                    <shadedPattern>${shadeBase}.com.sun.jersey</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.yahoo.memory</pattern>
+                                    <shadedPattern>${shadeBase}.com.yahoo.memory</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.yahoo.sketches</pattern>
+                                    <shadedPattern>${shadeBase}.com.yahoo.sketches</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>io.netty.buffer</pattern>
+                                    <shadedPattern>${shadeBase}.io.netty.buffer</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.arrow</pattern>
+                                    <shadedPattern>${shadeBase}.org.apache.arrow</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.curator</pattern>
+                                    <shadedPattern>${shadeBase}.org.apache.curator</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.datasketches</pattern>
+                                    <shadedPattern>${shadeBase}.org.apache.datasketches</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apiguardian.api</pattern>
+                                    <shadedPattern>${shadeBase}.org.apiguardian.api</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.fusesource.jansi</pattern>
+                                    <shadedPattern>${shadeBase}.org.fusesource.jansi</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.jvnet.mimepull</pattern>
+                                    <shadedPattern>${shadeBase}.org.jvnet.mimepull</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.locationtech</pattern>
+                                    <shadedPattern>${shadeBase}.org.locationtech</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.pentaho.aggdes</pattern>
+                                    <shadedPattern>${shadeBase}.org.pentaho.aggdes</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.reflections</pattern>
+                                    <shadedPattern>${shadeBase}.org.reflections</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.stringtemplate.v4</pattern>
+                                    <shadedPattern>${shadeBase}.org.stringtemplate.v4</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.threeten.extra.chrono</pattern>
+                                    <shadedPattern>${shadeBase}.org.threeten.extra.chrono</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.yaml.snakeyaml</pattern>
+                                    <shadedPattern>${shadeBase}.org.yaml.snakeyaml</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>io.jsonwebtoken</pattern>
+                                    <shadedPattern>${shadeBase}.io.jsonwebtoken</shadedPattern>
+                                </relocation>
                             </relocations>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
                                     <excludes>
                                         <exclude>META-INF/maven/**</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>com.google.protobuf:protobuf-java</artifact>
+                                    <excludes>
+                                        <exclude>google/protobuf/*.proto</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
@@ -777,6 +1224,12 @@
                                     <excludes>
                                         <exclude>hive-log4j2.properties</exclude>
                                         <exclude>parquet-logging.properties</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.hive:hive-parser</artifact>
+                                    <excludes>
+                                        <exclude>org/apache/hadoop/hive/ql/parse/HiveParser.class</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
@@ -796,13 +1249,19 @@
                                     </excludes>
                                 </filter>
                                 <filter>
+                                    <artifact>org.apache.hive:hive-standalone-metastore-common</artifact>
+                                    <excludes>
+                                        <exclude>saveVersion.sh</exclude>
+                                        <exclude>thrift-replacements.txt</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
                                     <artifact>org.apache.hive:hive-serde</artifact>
                                     <excludes>
-                                        <exclude>org/apache/hadoop/hive/serde2/avro/AvroDeserializer*.class</exclude>
-                                        <exclude>org/apache/hadoop/hive/serde2/avro/AvroSerdeUtils*.class</exclude>
+                                        <exclude>org/apache/hadoop/hive/serde2/avro/AvroSerDe*.class</exclude>
                                         <exclude>org/apache/hadoop/hive/serde2/avro/InstanceCache*.class</exclude>
-                                        <exclude>org/apache/hadoop/hive/serde2/avro/SchemaToTypeInfo*.class</exclude>
-                                        <exclude>org/apache/hadoop/hive/serde2/avro/TypeInfoToSchema*.class</exclude>
+                                        <exclude>org/apache/hadoop/hive/serde2/io/DoubleWritable*.class</exclude>
+                                        <exclude>org/apache/hadoop/hive/serde2/json/HiveJsonReader*.class</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
@@ -820,8 +1279,23 @@
                                 <filter>
                                     <artifact>org.apache.parquet:parquet-avro</artifact>
                                     <excludes>
+                                        <exclude>car.avdl</exclude>
                                         <exclude>stringBehavior.avsc</exclude>
+                                        <exclude>logicalType.avsc</exclude>
                                         <exclude>avro/org/apache/parquet/avro/StringBehaviorTest.java</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.parquet:parquet-format-structures</artifact>
+                                    <excludes>
+                                        <exclude>parquet.thrift</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.parquet:parquet-jackson</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/services/**</exclude>
+                                        <exclude>META-INF/versions/**</exclude>
                                     </excludes>
                                 </filter>
                                 <filter>
@@ -850,6 +1324,89 @@
                                     <artifact>com.fasterxml.jackson.core:*</artifact>
                                     <excludes>
                                         <exclude>META-INF/services/**</exclude>
+                                        <exclude>META-INF/versions/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>com.fasterxml.jackson.dataformat:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/services/**</exclude>
+                                        <exclude>META-INF/versions/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>com.sun.jersey.contribs:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/services/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>com.sun.jersey:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/services/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.datasketches:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/versions/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.calcite:calcite-core</artifact>
+                                    <excludes>
+                                        <exclude>codegen/**</exclude>
+                                        <exclude>META-INF/services/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.commons:commons-jexl3</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/services/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.commons:commons-math3</artifact>
+                                    <excludes>
+                                        <exclude>assets/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.arrow:*</artifact>
+                                    <excludes>
+                                        <exclude>arrow-git.properties</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.calcite.avatica:avatica-core</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/services/**</exclude>
+                                        <exclude>*.proto</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>commons-configuration:commons-configuration</artifact>
+                                    <excludes>
+                                        <exclude>digesterRules.xml</exclude>
+                                        <exclude>*.dtd</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.codehaus.janino:janino</artifact>
+                                    <excludes>
+                                        <exclude>org.codehaus.commons.compiler.properties</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>commons-io:commons-io</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/versions/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>commons-io:commons-io</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/versions/**</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
