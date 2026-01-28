@@ -52,11 +52,11 @@
 
         <dep.hive.version>3.0.0</dep.hive.version>
 
-        <dep.avro.version>1.11.3</dep.avro.version>
+        <dep.avro.version>1.12.0</dep.avro.version>
         <dep.jodd.version>3.5.2</dep.jodd.version>
-        <dep.parquet.version>1.13.1</dep.parquet.version>
+        <dep.parquet.version>1.16.0</dep.parquet.version>
         <dep.protobuf.version>2.5.0</dep.protobuf.version>
-        <dep.slf4j.version>1.7.25</dep.slf4j.version>
+        <dep.slf4j.version>2.0.16</dep.slf4j.version>
 
         <dep.nexus-staging-plugin.version>1.6.8</dep.nexus-staging-plugin.version>
     </properties>
@@ -659,7 +659,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
