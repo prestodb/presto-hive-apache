@@ -88,7 +88,7 @@ jobs:
           cat ~/.m2/settings.xml
           mvn -V -B -U -e -T2C deploy \
             -DdeploymentName=${{ github.event.repository.name }}-${{ env.RELEASE_VERSION }} \
-            -Poss-release
+            -Poss-release${{ vars.MOCK_PUBLISHING && ' || true' || '' }}
 
       - name: Push changes and tags
         run: |
