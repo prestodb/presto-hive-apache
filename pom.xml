@@ -10,7 +10,7 @@
 
     <groupId>com.facebook.presto.hive</groupId>
     <artifactId>hive-apache</artifactId>
-    <version>3.0.0-11</version>
+    <version>3.0.0-12-SNAPSHOT</version>
 
     <name>hive-apache</name>
     <description>Shaded version of Apache Hive for Presto</description>
@@ -34,7 +34,7 @@
         <connection>scm:git:git://github.com/prestodb/presto-hive-apache.git</connection>
         <developerConnection>scm:git:git://github.com/prestodb/presto-hive-apache.git</developerConnection>
         <url>https://github.com/prestodb/presto-hive-apache</url>
-        <tag>3.0.0-11</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
