@@ -75,7 +75,8 @@ import static java.util.Objects.requireNonNull;
  *
  * Support types are:<br>
  * <br>
- * <table border="1" summary="">
+ * <table border="1">
+ * <caption>JSON to Java Type Mappings</caption>
  * <tr>
  * <th>JSON Type</th>
  * <th>Java Type</th>
